@@ -1,0 +1,51 @@
+data:
+  root: "data/te/human"
+  target_npy: "target.npy"
+  graphs_pt: "human_graph.pt"
+  biochemical_features_npy: "feature.npy"
+  splits:
+    train: 0.7
+    val: 0.15
+  num_workers: 2
+  batch_size: 256
+
+model:
+  hybrite:
+    hidden_dim: 128
+    num_layers: 3
+    num_heads: 8
+    dropout: 0.3
+    dropedge_p: 0.1
+    dropedge_struct_p: 0.02
+    struct_weight_scale: 1.5
+    struct_message_scale: 1.5
+    pool: "attention"
+  biochemical_features_mlp:
+    hidden_dims: [128]
+    dropout: 0.3
+    activation: "leaky_relu"
+  head:
+    hidden_dims: [128, 64]
+    dropout: 0.3
+    activation: "leaky_relu"
+
+optimizer:
+  name: "adamw"
+  lr: 1.0e-3
+  weight_decay: 1.0e-3
+  betas: [0.9, 0.998]
+
+scheduler:
+  name: "reduce_lr_on_plateau"
+  mode: "min"
+  factor: 0.5
+  patience: 8
+  min_lr: 1.0e-9
+
+loss: "mse"
+
+metrics:
+  - "mse"
+  - "pearson"
+  - "spearman"
+  - "r2"
