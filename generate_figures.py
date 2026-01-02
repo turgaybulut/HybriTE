@@ -1225,7 +1225,7 @@ def figure_supp_correlation_mouse() -> None:
     fig.patch.set_facecolor("none")
     ax_mouse.patch.set_facecolor("none")
 
-    mask_mouse = np.tril(np.ones_like(corr_mouse, dtype=bool), k=0)
+    mask_mouse = np.triu(np.ones_like(corr_mouse, dtype=bool), k=0)
     corr_mouse_abs = np.abs(corr_mouse)
     corr_mouse_masked = np.where(mask_mouse, np.nan, corr_mouse_abs)
 
@@ -1233,15 +1233,9 @@ def figure_supp_correlation_mouse() -> None:
         corr_mouse_masked, cmap=correlation_cmap, vmin=0, vmax=1, aspect="equal"
     )
 
-    ax_mouse.yaxis.tick_right()
-    ax_mouse.yaxis.set_label_position("right")
-
-    ax_mouse.xaxis.tick_top()
-    ax_mouse.xaxis.set_label_position("top")
-
     ax_mouse.set_xticks(range(len(names_mouse)))
     ax_mouse.set_xticklabels(
-        names_mouse, rotation=45, ha="left", fontsize=5, fontweight="medium"
+        names_mouse, rotation=45, ha="right", fontsize=5, fontweight="medium"
     )
     ax_mouse.set_yticks(range(len(names_mouse)))
     ax_mouse.set_yticklabels(names_mouse, fontsize=5, fontweight="medium")
@@ -1253,7 +1247,7 @@ def figure_supp_correlation_mouse() -> None:
         "Mouse Target Correlation",
         fontweight="bold",
         fontsize=12,
-        loc="right",
+        loc="left",
     )
 
     cbar_mouse = fig.colorbar(
