@@ -1,0 +1,43 @@
+[project]
+name = "hybrite"
+version = "1.0.0"
+description = "HybriTE: Unifying RNA secondary structure and biochemical priors for translation efficiency prediction via Graph Neural Networks"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "omegaconf",
+  "numpy",
+  "pandas",
+  "scipy",
+  "scikit-learn",
+  "torch",
+  "torchvision",
+  "lightning",
+  "torchmetrics",
+  "torch_geometric",
+  "tensorboard",
+  "rich",
+  "xgboost",
+  "matplotlib",
+  "seaborn",
+  "shap",
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["framework*", "plugins*"]
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "N", "UP"]
+ignore = ["N803", "N806"]

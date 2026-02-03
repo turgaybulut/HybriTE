@@ -1,0 +1,37 @@
+plugin: "hybrite"
+
+seed: 654
+n_folds: 10
+output_dir: "results"
+
+trainer:
+  accelerator: auto
+  devices: auto
+  max_epochs: 200
+  precision: 32
+  gradient_clip_val: 0.5
+  log_every_n_steps: 10
+
+logger:
+  name: "tensorboard"
+  save_dir: "${output_dir}"
+  version: ""
+
+callbacks:
+  - name: early_stopping
+    monitor: val_loss
+    patience: 20
+    mode: "min"
+  - name: model_checkpoint
+    dirpath: "${output_dir}/${plugin}"
+    filename: "{epoch:03d}-{val_loss:.4f}"
+    save_top_k: 1
+    monitor: "val_loss"
+    mode: "min"
+  - name: learning_rate_monitor
+    logging_interval: "step"
+  - name: rich_progress_bar
+    refresh_rate: 1
+    leave: true
+  - name: rich_model_summary
+    max_depth: 1
