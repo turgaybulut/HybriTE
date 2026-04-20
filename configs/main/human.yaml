@@ -1,0 +1,19 @@
+extends: ../base/base.yaml
+
+name: human
+
+paths:
+  prepared_dir: artifacts/prepared/human
+  results_dir: results/human
+
+dataset:
+  table_path: data/raw/human/translation_efficiency_with_biochemistry.csv
+  graph_path: data/derived/graphs/human/human_graph.pt
+  structure_cache_dir: data/derived/structure_cache/human
+
+graphs:
+  use_structure: true
+
+features:
+  selection_mode: train_fold
+  select_k: 100

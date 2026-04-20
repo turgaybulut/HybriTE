@@ -1,0 +1,13 @@
+extends: ../main/human.yaml
+
+name: human_threshold_1e_2
+
+paths:
+  prepared_dir: artifacts/prepared/human_threshold_1e_2
+  results_dir: results/human_threshold_1e_2
+
+dataset:
+  graph_path: artifacts/graphs/human_graph_threshold_1e_2.pt
+
+graphs:
+  structure_probability_threshold: 0.01

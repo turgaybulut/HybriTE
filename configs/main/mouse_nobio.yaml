@@ -1,0 +1,10 @@
+extends: mouse.yaml
+
+name: mouse_nobio
+
+paths:
+  prepared_dir: artifacts/prepared/mouse
+  results_dir: results/mouse_nobio
+
+model:
+  use_biochemistry: false

@@ -1,0 +1,21 @@
+extends: ../base/base.yaml
+
+name: mouse
+
+paths:
+  prepared_dir: artifacts/prepared/mouse
+  results_dir: results/mouse
+
+dataset:
+  table_path: data/derived/mouse/translation_efficiency_with_biochemistry.csv
+  graph_path: data/derived/graphs/mouse/mouse_graph.pt
+  structure_cache_dir: data/derived/structure_cache/mouse
+
+graphs:
+  use_structure: true
+
+features:
+  selection_mode: transfer
+  select_k: 100
+  source_prepared_dir: artifacts/prepared/human
+  orthology_manifest: data/derived/mouse/orthology_manifest.json

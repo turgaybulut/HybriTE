@@ -1,0 +1,10 @@
+extends: ../main/human.yaml
+
+name: human_hp_layers_2_hidden_256
+
+paths:
+  results_dir: results/human_hp_layers_2_hidden_256
+
+model:
+  num_layers: 2
+  hidden_dim: 256

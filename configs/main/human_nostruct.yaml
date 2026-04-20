@@ -1,0 +1,13 @@
+extends: human.yaml
+
+name: human_nostruct
+
+paths:
+  prepared_dir: artifacts/prepared/human_nostruct
+  results_dir: results/human_nostruct
+
+dataset:
+  graph_path: data/derived/graphs/human/human_graph_nostruct.pt
+
+graphs:
+  use_structure: false

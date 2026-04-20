@@ -1,0 +1,80 @@
+seed: 654
+
+name: base
+
+paths:
+  prepared_dir: artifacts/prepared/base
+  results_dir: results/base
+
+dataset:
+  table_path: ""
+  graph_path: ""
+  structure_cache_dir: null
+  id_column: gene_id
+  target_patterns:
+    - "^bio_source_.*$"
+  biochemical_patterns:
+    - "^biochemical_.*$"
+
+graphs:
+  use_structure: true
+  tx_column: tx_sequence
+  utr5_column: utr5_sequence
+  cds_column: cds_sequence
+  utr3_column: utr3_sequence
+  utr5_bins: 8
+  cds_bins: 32
+  utr3_bins: 16
+  structure_probability_threshold: 0.001
+  num_workers: 4
+
+folds:
+  count: 10
+  validation_fraction: 0.15
+
+features:
+  selection_mode: train_fold
+  select_k: 100
+  source_prepared_dir: null
+  orthology_manifest: null
+
+training:
+  batch_size: 64
+  num_workers: 2
+  accelerator: auto
+  devices: auto
+  strategy: auto
+  use_distributed_sampler: true
+  precision: 32
+  max_epochs: 200
+  patience: 20
+  gradient_clip_val: 0.5
+
+optimization:
+  lr: 0.001
+  weight_decay: 0.001
+  betas: [0.9, 0.998]
+  scheduler_factor: 0.5
+  scheduler_patience: 8
+  scheduler_min_lr: 1.0e-9
+
+model:
+  use_biochemistry: true
+  hidden_dim: 128
+  num_layers: 3
+  num_heads: 8
+  dropout: 0.3
+  dropedge_p: 0.1
+  dropedge_struct_p: 0.02
+  struct_weight_scale: 1.5
+  struct_message_scale: 1.5
+  pooling: attention
+  biochemical_hidden_dims: [128]
+  biochemical_dropout: 0.3
+  biochemical_activation: leaky_relu
+  head_hidden_dims: [128, 64]
+  head_dropout: 0.3
+  head_activation: leaky_relu
+
+evaluation:
+  bootstrap_samples: 200

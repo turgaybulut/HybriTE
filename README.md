@@ -1,150 +1,94 @@
 # HybriTE
 
-HybriTE is a graph neural network for mRNA translation efficiency (TE) prediction. It models each transcript as a heterogeneous graph that combines sequence composition, RNA secondary structure from RNAplfold, and biochemical priors (RBP binding, modifications). This repository contains the code used in the HybriTE paper, including data preparation, graph construction, training, prediction, and explainability.
+HybriTE is a graph neural network for mRNA translation efficiency (TE) prediction. It represents each transcript with region-aware graph nodes that combine sequence-derived features, RNA secondary-structure priors from RNAplfold, and biochemical annotations. This repository contains the HybriTE code used for data preparation, graph construction, HybriTE training, LightGBM baseline training, cross-species evaluation, interpretability, and figure generation.
 
 ## Requirements
 
 - Python 3.10
-- ViennaRNA (RNAplfold)
+- ViennaRNA (`RNAplfold` on `PATH`)
 
-Quick setup (conda):
+## Setup
 
 ```bash
-git clone https://github.com/turgaybulut/HybriTE.git && cd HybriTE
 conda env create -f environment.yaml
 conda activate hybrite
 pip install -e .
 ```
 
-## Data download
+## Dataset
 
-Download the prepared CSV files from this [Google Drive folder](https://drive.google.com/drive/folders/1h4gT797xGT1nZgT0iuO-dTuFukhOvsNT?usp=sharing) and place them here:
+Download the prepared dataset files from this Google Drive folder:
 
-- `data/te/human_te_data_with_biochemicals.csv`
-- `data/te/mouse_te_data_with_biochemicals.csv`
+<https://drive.google.com/drive/folders/1h4gT797xGT1nZgT0iuO-dTuFukhOvsNT?usp=sharing>
 
-These paths are used by the commands below.
+Place the downloaded files at the paths expected by the configs:
 
-## Workflow
+- `data/raw/human/translation_efficiency_with_biochemistry.csv`
+- `data/raw/mouse/translation_efficiency_raw.csv`
+- `data/derived/mouse/translation_efficiency_with_biochemistry.csv` (if using the transferred mouse table directly)
 
-Follow these steps in order. Paths below match the repository layout.
+If you want to rebuild the mouse transferred table yourself, also provide:
 
-### 1) Prepare data arrays
+- `data/raw/orthology/mart_export.txt`
 
-Convert the CSV into NumPy arrays for targets and biochemical features.
+## Main folders
 
-```bash
-python scripts/prepare_data.py \
-  --input_csv data/te/human_te_data_with_biochemicals.csv \
-  --out_dir data/te/human \
-  --select_k 100
-```
+- `hybrite/` — core model and utilities
+- `scripts/` — runnable paper scripts
+- `configs/` — paper configs only
 
-For mouse, reuse the human-selected biochemical feature set:
+## Scripts
 
-```bash
-python scripts/prepare_data.py \
-  --input_csv data/te/mouse_te_data_with_biochemicals.csv \
-  --out_dir data/te/mouse \
-  --feature_meta data/te/human/meta.json
-```
+### Data and graph preparation
 
-Outputs per species:
+- `scripts/transfer_orthology.py` — transfer human biochemical features to mouse through one-to-one orthology
+- `scripts/precompute_structure.py` — run RNAplfold and save structure caches
+- `scripts/build_graphs.py` — build HybriTE transcript graphs from input tables
+- `scripts/prepare.py` — create CV folds and fold-specific biochemical feature manifests
 
-- `data/te/<species>/target.npy`
-- `data/te/<species>/feature.npy`
-- `data/te/<species>/meta.json`
+### Training
 
-### 2) Build graphs
+- `scripts/train.py` — train the HybriTE graph model
+- `scripts/train_baseline.py` — train the LightGBM biochemical-only baseline
 
-Requires RNAplfold in your PATH.
+### Cross-species evaluation
 
-```bash
-python scripts/generate_graphs.py \
-  data/te/human_te_data_with_biochemicals.csv \
-  data/te/human/human_graph.pt
+- `scripts/cross_species.py` — evaluate a HybriTE checkpoint across species
+- `scripts/cross_species_baseline.py` — evaluate a LightGBM baseline across species
 
-python scripts/generate_graphs.py \
-  data/te/mouse_te_data_with_biochemicals.csv \
-  data/te/mouse/mouse_graph.pt
-```
+### Analysis and figures
 
-For the no-structure ablation:
+- `scripts/compare_runs.py` — compare two matched run directories fold by fold
+- `scripts/generate_interpretability_artifacts.py` — generate human interpretability outputs
+- `scripts/generate_all_figures.py` — generate all main paper figures
 
-```bash
-python scripts/generate_graphs_no_structure.py \
-  data/te/human_te_data_with_biochemicals.csv \
-  data/te/human/human_graph_nostruct.pt
-```
+### Figure scripts
 
-### 3) Train
+- `scripts/plots/plot_figure_performance_analysis.py` — main benchmark, ablation, and transfer figure
+- `scripts/plots/plot_figure_interpretability_analysis.py` — interpretability figure
+- `scripts/plots/plot_figure_per_target_performance.py` — per-source performance figure
+- `scripts/plots/plot_figure_target_correlation.py` — prediction-similarity figure
 
-Model settings are loaded from `config.yaml` and `plugins/hybrite/config.yaml`.
-Update `plugins/hybrite/config.yaml` to switch between human and mouse:
+## Main configs
 
-- `data.root: data/te/human` or `data/te/mouse`
-- `data.graphs_pt: human_graph.pt` or `mouse_graph.pt`
+- `configs/main/human.yaml` — full human HybriTE model
+- `configs/main/human_nobio.yaml` — human `-Bio` ablation
+- `configs/main/human_nostruct.yaml` — human `-Struct` ablation
+- `configs/main/mouse.yaml` — full mouse HybriTE model
+- `configs/main/mouse_nobio.yaml` — mouse `-Bio` ablation
+- `configs/main/mouse_nostruct.yaml` — mouse `-Struct` ablation
+- `configs/baselines/human_lightgbm.yaml` — human LightGBM baseline
+- `configs/baselines/mouse_lightgbm.yaml` — mouse LightGBM baseline
 
-Single split:
+## Sensitivity configs used in the paper
 
-```bash
-python train.py --config config.yaml
-```
-
-K-fold cross-validation:
-
-```bash
-python train_fold.py --config config.yaml
-```
-
-Checkpoints and logs are written under `results/hybrite/`.
-
-### 4) Predict
-
-Run inference from a saved checkpoint.
-
-```bash
-python predict.py \
-  --checkpoint results/hybrite/fold_00/checkpoints/<checkpoint>.ckpt \
-  --config config.yaml \
-  --output_dir results/hybrite/fold_00
-```
-
-Run inference for all folds:
-
-```bash
-./predict_all_folds.sh results/hybrite/
-```
-
-Outputs:
-
-- `predictions.csv`
-- `ground_truth.csv`
-- `metrics.csv`
-- `target_metrics.csv` (per-target)
-
-### 5) Explainability
-
-Generate SHAP and graph importance plots.
-
-```bash
-python scripts/explain_model.py \
-  --checkpoint results/hybrite/fold_00/checkpoints/<checkpoint>.ckpt \
-  --species human \
-  --data_dir data/te/human \
-  --output_dir figures/shap
-```
-
-### 6) Cross-species prediction
-
-Use a model trained on one species to predict another.
-
-```bash
-python predict_cross_species.py \
-  --checkpoint results/hybrite/fold_00/checkpoints/<checkpoint>.ckpt \
-  --train_config config.yaml \
-  --test_inputs data/te/mouse/mouse_graph.pt \
-  --test_targets data/te/mouse/target.npy \
-  --test_biochemical_features data/te/mouse/feature.npy \
-  --suffix human_to_mouse
-```
+- `configs/controls/human_bins_coarse.yaml`
+- `configs/controls/human_bins_fine.yaml`
+- `configs/controls/human_threshold_1e_2.yaml`
+- `configs/controls/human_threshold_1e_1.yaml`
+- `configs/controls/human_hp_layers_2_hidden_64.yaml`
+- `configs/controls/human_hp_layers_2_hidden_128.yaml`
+- `configs/controls/human_hp_layers_2_hidden_256.yaml`
+- `configs/controls/human_hp_layers_3_hidden_64.yaml`
+- `configs/controls/human_hp_layers_3_hidden_128.yaml`
+- `configs/controls/human_hp_layers_3_hidden_256.yaml`

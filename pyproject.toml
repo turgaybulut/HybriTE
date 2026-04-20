@@ -1,26 +1,22 @@
 [project]
 name = "hybrite"
-version = "1.0.0"
-description = "HybriTE: Unifying RNA secondary structure and biochemical priors for translation efficiency prediction via Graph Neural Networks"
+version = "2.0.0"
+description = "HybriTE: a graph-based multimodal project for endogenous TE prediction"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-  "omegaconf",
+  "lightgbm",
+  "lightning",
+  "matplotlib",
   "numpy",
   "pandas",
+  "pyyaml",
   "scipy",
   "scikit-learn",
   "torch",
-  "torchvision",
-  "lightning",
-  "torchmetrics",
-  "torch_geometric",
-  "tensorboard",
+  "torch-geometric",
+  "tqdm",
   "rich",
-  "xgboost",
-  "matplotlib",
-  "seaborn",
-  "shap",
 ]
 
 [build-system]
@@ -28,7 +24,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-include = ["framework*", "plugins*"]
+include = ["hybrite*"]
 
 [tool.ruff]
 line-length = 88

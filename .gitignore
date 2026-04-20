@@ -1,105 +1,38 @@
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
 *.py[cod]
-*$py.class
+*.pyo
 
-# C extensions
-*.so
-
-# Distribution / packaging
-.Python
+# Packaging
 build/
-develop-eggs/
 dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
 *.egg-info/
-.installed.cfg
-*.egg
 
-# PyInstaller
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-
-# Translations
-*.mo
-*.pot
-
-# Environments
-.env
-.venv
-env/
+# Virtual environments
+.venv/
 venv/
-ENV/
-env.bak/
-venv.bak/
+env/
 
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# pyenv
-.python-version
-
-# OS
+# OS files
 .DS_Store
-Thumbs.db
 
-# Project specific
-logs/
+# Local environment files
+.env
+
+# Generated data and outputs
+data/
+artifacts/
 results/
-models/
-checkpoints/
+
+# Model/data artifacts
 *.ckpt
 *.pt
-*.pth
-wandb/
-lightning_logs/
-.ruff_cache/
-downloads/
-
-# Data files (too large for git)
-data/te/human/*.npy
-data/te/human/*.pt
-data/te/mouse/*.npy
-data/te/mouse/*.pt
-
-# Paper files (keep separate)
-*.aux
-*.bbl
-*.blg
-*.log
-*.out
-*.synctex.gz
-figures/
+*.npy
+*.npz
+*.pkl

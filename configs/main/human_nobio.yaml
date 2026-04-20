@@ -1,0 +1,10 @@
+extends: human.yaml
+
+name: human_nobio
+
+paths:
+  prepared_dir: artifacts/prepared/human
+  results_dir: results/human_nobio
+
+model:
+  use_biochemistry: false

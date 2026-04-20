@@ -1,0 +1,13 @@
+extends: mouse.yaml
+
+name: mouse_nostruct
+
+paths:
+  prepared_dir: artifacts/prepared/mouse_nostruct
+  results_dir: results/mouse_nostruct
+
+dataset:
+  graph_path: data/derived/graphs/mouse/mouse_graph_nostruct.pt
+
+graphs:
+  use_structure: false

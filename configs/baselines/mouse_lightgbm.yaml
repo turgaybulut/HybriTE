@@ -1,0 +1,11 @@
+extends: ../main/mouse.yaml
+
+name: mouse_lightgbm
+
+paths:
+  prepared_dir: artifacts/prepared/mouse
+  results_dir: results/mouse_lightgbm
+
+baseline:
+  type: lightgbm
+  use_biochemistry: true

@@ -1,0 +1,11 @@
+extends: ../main/human.yaml
+
+name: human_lightgbm
+
+paths:
+  prepared_dir: artifacts/prepared/human
+  results_dir: results/human_lightgbm
+
+baseline:
+  type: lightgbm
+  use_biochemistry: true

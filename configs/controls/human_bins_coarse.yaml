@@ -1,0 +1,15 @@
+extends: ../main/human.yaml
+
+name: human_bins_coarse
+
+paths:
+  prepared_dir: artifacts/prepared/human_bins_coarse
+  results_dir: results/human_bins_coarse
+
+dataset:
+  graph_path: artifacts/graphs/human_graph_bins_coarse.pt
+
+graphs:
+  utr5_bins: 4
+  cds_bins: 16
+  utr3_bins: 8

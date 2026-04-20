@@ -1,0 +1,15 @@
+extends: ../main/human.yaml
+
+name: human_bins_fine
+
+paths:
+  prepared_dir: artifacts/prepared/human_bins_fine
+  results_dir: results/human_bins_fine
+
+dataset:
+  graph_path: artifacts/graphs/human_graph_bins_fine.pt
+
+graphs:
+  utr5_bins: 12
+  cds_bins: 48
+  utr3_bins: 24
